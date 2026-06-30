@@ -1,0 +1,8 @@
+References,Qty,Value,Footprint,Description
+D1 D2 D3 D4 D5 D6 D7 D8 D9,9,1N4148,Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal,Matrix diode (pad1=cathode)
+J1,1,OLED_I2C,Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical,0.96in SSD1306 OLED header (GND/VCC/SCL/SDA)
+LED1 LED2,2,WS2812B,LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm,WS2812B addressable RGB LED
+R1,1,330,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,WS2812 data series resistor
+RV1 RV2,2,EC11,Rotary_Encoder:RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,Alps EC11 rotary encoder w/ switch
+SW1 SW2 SW3 SW4 SW5 SW6 SW7 SW8 SW9,9,MX,Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB,Cherry MX 1u keyswitch
+U1,1,ESP32-DevKitC,LevvDeck:ESP32_DevKitC_38P_Socket,"ESP32-WROOM-32 dev board, socketed (B.Cu)"

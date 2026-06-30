@@ -1,0 +1,31 @@
+(version 1)
+
+# JLCPCB 2-layer capability ruleset for LevvDeck.
+# Copy this to "levvdeck.kicad_dru" next to levvdeck.kicad_pcb so KiCad's DRC
+# (and `kicad-cli pcb drc`) picks it up automatically. The Makefile does this
+# for you (`make drc`). Values follow JLCPCB's standard 2-layer process.
+
+(rule "JLCPCB min track width"
+	(constraint track_width (min 0.15mm))
+	(layer outer))
+
+(rule "JLCPCB min clearance"
+	(constraint clearance (min 0.15mm)))
+
+(rule "JLCPCB min drill (PTH)"
+	(constraint hole_size (min 0.3mm)))
+
+(rule "JLCPCB min annular ring"
+	(constraint annular_width (min 0.13mm)))
+
+(rule "JLCPCB min hole-to-hole"
+	(constraint hole_to_hole (min 0.5mm)))
+
+(rule "JLCPCB min via diameter"
+	(constraint via_diameter (min 0.45mm)))
+
+(rule "JLCPCB board edge clearance"
+	(constraint edge_clearance (min 0.3mm)))
+
+(rule "JLCPCB silk to mask clearance"
+	(constraint silk_clearance (min 0.15mm)))

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+
+# KiCad build artifacts (produced locally by the pipeline)
+levvdeck.kicad_pcb
+levvdeck.kicad_pcb-bak
+levvdeck.kicad_dru
+levvdeck.dsn
+levvdeck.ses
+levvdeck-gerber.zip
+gerber/
+drc.rpt
+render-*.png
+render-*.svg
+
+# freerouting
+freerouting-*.jar

@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "LevvDeck")(type "KiCad")(uri "${KIPRJMOD}/footprints/LevvDeck.pretty")(options "")(descr "LevvDeck custom footprints (U1 ESP32 socket)"))
+)

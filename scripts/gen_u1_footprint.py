@@ -26,23 +26,17 @@ import sys
 
 # Make gen_netlist importable whether run from repo root or scripts/.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from gen_netlist import PINOUT  # noqa: E402
+# Pinout and the canonical DevKitC pad layout live in gen_netlist (single
+# source of truth). LEFT/RIGHT labels are re-exported here for gen_connections.
+from gen_netlist import (  # noqa: E402
+    PINOUT,
+    U1_LEFT_LABELS as LEFT_LABELS,
+    U1_RIGHT_LABELS as RIGHT_LABELS,
+)
 
 PITCH_MM = 2.54
 DEFAULT_ROW_SPACING_MM = 22.86   # PLACEHOLDER — override with measured value
 PADS_PER_ROW = 19
-
-# Canonical DevKitC-V4 38-pin layout, viewed from the TOP with USB at bottom.
-# Left column, pin 1 (top) -> pin 19 (bottom).
-LEFT_LABELS = [
-    "3V3", "EN", "IO36", "IO39", "IO34", "IO35", "IO32", "IO33", "IO25",
-    "IO26", "IO27", "IO14", "IO12", "GND", "IO13", "IO9", "IO10", "IO11", "5V",
-]
-# Right column, pin 1 (top) -> pin 19 (bottom).
-RIGHT_LABELS = [
-    "GND", "IO23", "IO22", "IO1", "IO3", "IO21", "GND", "IO19", "IO18", "IO5",
-    "IO17", "IO16", "IO4", "IO0", "IO2", "IO15", "IO8", "IO7", "IO6",
-]
 
 
 def label_to_net():

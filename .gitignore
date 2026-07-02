@@ -16,3 +16,10 @@ render-*.svg
 
 # freerouting
 freerouting-*.jar
+
+# KiCad project cruft (keep levvdeck.kicad_pro tracked — it's source)
+levvdeck.kicad_pro-bak
+*.kicad_prl
+fp-info-cache
+*-backups/
+*.lck

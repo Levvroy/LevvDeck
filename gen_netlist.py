@@ -69,6 +69,32 @@ FP = {
     "U1":   "LevvDeck:ESP32_DevKitC_38P_Socket",
 }
 
+# Canonical DevKitC-V4 38-pin layout (single source of truth; also imported by
+# scripts/gen_u1_footprint.py). Top->bottom, viewed from the top with USB down.
+U1_LEFT_LABELS = [
+    "3V3", "EN", "IO36", "IO39", "IO34", "IO35", "IO32", "IO33", "IO25",
+    "IO26", "IO27", "IO14", "IO12", "GND", "IO13", "IO9", "IO10", "IO11", "5V",
+]
+U1_RIGHT_LABELS = [
+    "GND", "IO23", "IO22", "IO1", "IO3", "IO21", "GND", "IO19", "IO18", "IO5",
+    "IO17", "IO16", "IO4", "IO0", "IO2", "IO15", "IO8", "IO7", "IO6",
+]
+
+# Electrical pad names per part (verified against the KiCad libraries). Used to
+# declare every pad in the netlist so KiCad's "Update PCB from Netlist" imports
+# with no "no pin X in symbol" warnings. Empty-named mechanical pads (e.g. the
+# Cherry MX NPTH mounting holes) are intentionally omitted — KiCad ignores them.
+PART_PADS = {
+    "SW":  ["1", "2"],
+    "D":   ["1", "2"],
+    "RV":  ["A", "B", "C", "S1", "S2", "MP"],
+    "J":   ["1", "2", "3", "4"],
+    "R":   ["1", "2"],
+    "LED": ["1", "2", "3", "4"],
+    # unique-preserving order for the 38 DevKitC pads (GND appears 3x -> 1 name)
+    "U1":  list(dict.fromkeys(U1_LEFT_LABELS + U1_RIGHT_LABELS)),
+}
+
 # 3x3 matrix, COL2ROW. Each entry: (switch, diode, row_net, col_net)
 MATRIX = [
     ("SW1", "D1", "ROW0", "COL0"),
@@ -171,6 +197,17 @@ def build_design():
             prev_din_net = chain
         # last LED DOUT (pad2) intentionally left unconnected
 
+    # --- declare every remaining footprint pad ----------------------------
+    # KiCad warns ("no pin X in symbol") for any footprint pad missing from the
+    # netlist. Put each still-floating pad on its own unconnected-() net, which
+    # is exactly how KiCad's own netlists represent no-connects.
+    fp_pads = {FP[kind]: pads for kind, pads in PART_PADS.items()}
+    present = {(ref, pad) for nodes in nets.values() for (ref, pad) in nodes}
+    for c in components:
+        for pad in fp_pads.get(c["footprint"], []):
+            if (c["ref"], pad) not in present:
+                nets["unconnected-(%s-%s)" % (c["ref"], pad)] = [(c["ref"], pad)]
+
     return components, nets
 
 
@@ -212,10 +249,11 @@ def render_netlist(components, nets) -> str:
 
 def summarize(components, nets):
     n_comp = len(components)
-    n_net = len(nets)
+    n_unconn = sum(1 for name in nets if name.startswith("unconnected-"))
+    n_signal = len(nets) - n_unconn
     # An unresolved footprint = empty/None footprint string.
     unresolved = [c["ref"] for c in components if not c.get("footprint")]
-    return n_comp, n_net, unresolved
+    return n_comp, n_signal, n_unconn, unresolved
 
 
 def main(argv=None):
@@ -227,11 +265,14 @@ def main(argv=None):
     args = p.parse_args(argv)
 
     components, nets = build_design()
-    n_comp, n_net, unresolved = summarize(components, nets)
+    n_comp, n_signal, n_unconn, unresolved = summarize(components, nets)
 
     print("LevvDeck design summary")
     print("  footprints (components): %d  (expected 25 for 2x WS2812)" % n_comp)
-    print("  nets:                    %d  (this topology = 29)" % n_net)
+    print("  signal nets:             %d  (this topology = 29)" % n_signal)
+    print("  unconnected stub nets:   %d  (floating pads, incl. spare U1 GPIO)"
+          % n_unconn)
+    print("  total nets:              %d" % (n_signal + n_unconn))
     print("  unresolved footprints:   %d" % len(unresolved))
     if unresolved:
         print("    -> " + ", ".join(unresolved))
@@ -240,6 +281,8 @@ def main(argv=None):
     problems = []
     if n_comp != expected_comp:
         problems.append("component count %d != expected %d" % (n_comp, expected_comp))
+    if n_signal != 29:
+        problems.append("signal net count %d != expected 29" % n_signal)
     if unresolved:
         problems.append("unresolved footprints present")
 
@@ -249,9 +292,9 @@ def main(argv=None):
             for pr in problems:
                 print("  - " + pr)
             return 1
-        print("\nOK: counts consistent, all footprints resolved.")
-        print("Note: net count is 29 (brief said ~30; the difference is the\n"
-              "      last LED's open DOUT, which is not a net).")
+        print("\nOK: 25 footprints, 29 signal nets, all pads declared.")
+        print("Every footprint pad is in a net, so KiCad's netlist import is\n"
+              "clean (no 'no pin X in symbol' warnings).")
         return 0
 
     text = render_netlist(components, nets)

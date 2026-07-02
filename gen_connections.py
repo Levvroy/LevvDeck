@@ -67,13 +67,19 @@ def render():
     out.append("ROW2    SW7/D7    SW8/D8    SW9/D9")
     out.append("```\n")
 
-    out.append("## Nets (%d total)\n" % len(nets))
+    signal = [(n, nd) for n, nd in nets.items()
+              if not n.startswith("unconnected-")]
+    n_unconn = len(nets) - len(signal)
+    out.append("## Nets (%d signal)\n" % len(signal))
     out.append("| # | Net | Nodes (ref.pad) |")
     out.append("|---|---|---|")
-    for i, (name, nodes) in enumerate(nets.items(), 1):
+    for i, (name, nodes) in enumerate(signal, 1):
         node_s = ", ".join("%s.%s" % (r, p) for r, p in nodes)
         out.append("| %d | `%s` | %s |" % (i, name, node_s))
     out.append("")
+    out.append("_Plus %d `unconnected-(...)` stub nets — one per floating "
+               "footprint pad (spare U1 GPIO + LED2 DOUT) — so KiCad's netlist "
+               "import is warning-free._\n" % n_unconn)
 
     out.append("## U1 — ESP32 DevKitC socket pad map\n")
     out.append("> 🛑 **HUMAN CHECK**: row spacing must be measured with "

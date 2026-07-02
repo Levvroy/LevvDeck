@@ -38,6 +38,29 @@ library (that pitch is the 6-pin PLCC6 part). This design uses the correct 4-pin
 WS2812B 5050 footprint **`LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm`**. All other
 footprints are used exactly as named in the brief.
 
+## Importing the netlist in the KiCad GUI
+
+The custom U1 footprint lives in the **project** library `LevvDeck`
+(`footprints/LevvDeck.pretty/`), registered in the project `fp-lib-table` via
+`${KIPRJMOD}`. That variable only resolves when the KiCad **project** is open,
+so import through the project — not a standalone board:
+
+1. In the KiCad project manager, **open `levvdeck.kicad_pro`** (the whole
+   `LevvDeck` folder must stay together — `.kicad_pro`, `fp-lib-table`, and
+   `footprints/`).
+2. Open the **PCB Editor** from that project window.
+3. **Tools → Update PCB from Netlist…**, pick `levvdeck.net`, *Update PCB*.
+   With the current netlist this reports **0 errors, 0 warnings** and adds U1.
+
+If you still see *"footprint … not found"*, the project table isn't loaded —
+either you opened a board outside this folder, or the lib needs registering:
+**Preferences → Manage Footprint Libraries → Project Specific Libraries → add**
+nickname `LevvDeck`, path `${KIPRJMOD}/footprints/LevvDeck.pretty`.
+
+> One-command alternative (no GUI, no lib table): `python scripts/build_board.py`
+> loads the `.pretty` directly and writes `levvdeck.kicad_pcb`. Same result as
+> `make board`.
+
 ## Pipeline
 
 ```sh

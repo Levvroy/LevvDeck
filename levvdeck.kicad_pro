@@ -1,0 +1,54 @@
+{
+  "board": {
+    "design_settings": {
+      "defaults": {},
+      "rules": {
+        "min_annular_width": 0.13,
+        "min_clearance": 0.15,
+        "min_hole_to_hole": 0.5,
+        "min_through_hole_diameter": 0.3,
+        "min_track_width": 0.15,
+        "min_via_diameter": 0.45
+      }
+    }
+  },
+  "boards": [],
+  "libraries": {
+    "pinned_footprint_libs": [
+      "LevvDeck"
+    ],
+    "pinned_symbol_libs": []
+  },
+  "meta": {
+    "filename": "levvdeck.kicad_pro",
+    "version": 1
+  },
+  "net_settings": {
+    "classes": [
+      {
+        "name": "Default",
+        "clearance": 0.15,
+        "track_width": 0.3
+      },
+      {
+        "name": "Power",
+        "clearance": 0.2,
+        "track_width": 0.5
+      }
+    ]
+  },
+  "pcbnew": {
+    "last_paths": {
+      "gencad": "",
+      "idf": "",
+      "netlist": "levvdeck.net",
+      "specctra_dsn": "levvdeck.dsn",
+      "step": "",
+      "vrml": ""
+    },
+    "page_layout_descr_file": ""
+  },
+  "schematic": {},
+  "sheets": [],
+  "text_variables": {}
+}

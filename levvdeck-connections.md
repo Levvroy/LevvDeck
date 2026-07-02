@@ -56,7 +56,7 @@ ROW1    SW4/D4    SW5/D5    SW6/D6
 ROW2    SW7/D7    SW8/D8    SW9/D9
 ```
 
-## Nets (29 total)
+## Nets (29 signal)
 
 | # | Net | Nodes (ref.pad) |
 |---|---|---|
@@ -89,6 +89,8 @@ ROW2    SW7/D7    SW8/D8    SW9/D9
 | 27 | `n_SW9_D9` | SW9.2, D9.2 |
 | 28 | `WS_DIN1` | R1.2, LED1.4 |
 | 29 | `WS_CHAIN1` | LED1.2, LED2.4 |
+
+_Plus 19 `unconnected-(...)` stub nets — one per floating footprint pad (spare U1 GPIO + LED2 DOUT) — so KiCad's netlist import is warning-free._
 
 ## U1 — ESP32 DevKitC socket pad map
 
